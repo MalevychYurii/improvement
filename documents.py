@@ -1,8 +1,8 @@
-from docx2pdf import convert
 from pdf2docx import Converter
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import os
+import subprocess
 
 supported_input_formats = ["docx", "pdf", "txt"]
 
@@ -11,7 +11,7 @@ def convert_document(input_path, output_format):
         print(f"File not found: {input_path}")
         return
 
-    input_format = os.path.splitext(input_path)[1].replace(".", "") # витягує формат
+    input_format = os.path.splitext(input_path)[1].replace(".", "")
     name = os.path.splitext(input_path)[0]
     output_path = f"{name}.{output_format}"
 
@@ -21,7 +21,7 @@ def convert_document(input_path, output_format):
         return
 
     if input_format == "docx" and output_format == "pdf":
-        convert(input_path, output_path)
+        docx_to_pdf(input_path, output_path)
     elif input_format == "pdf" and output_format == "docx":
         cv = Converter(input_path)
         cv.convert(output_path)
@@ -33,6 +33,32 @@ def convert_document(input_path, output_format):
         return
 
     print(f"Saved as: {output_path}")
+
+
+def docx_to_pdf(input_path, output_path):
+    output_dir = os.path.dirname(os.path.abspath(output_path))
+    word_paths = [
+        r"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE",
+        r"C:\Program Files (x86)\Microsoft Office\root\Office16\WINWORD.EXE",
+        r"C:\Program Files\Microsoft Office\Office16\WINWORD.EXE",
+    ]
+    
+    word_exe = None
+    for path in word_paths:
+        if os.path.exists(path):
+            word_exe = path
+            break
+    
+    if not word_exe:
+        raise Exception("Microsoft Word not found")
+    
+    subprocess.run([
+        word_exe,
+        "/q",
+        "/n",
+        input_path,
+        "/mFileSaveAs",
+    ], timeout=30)
 
 
 def txt_to_pdf(input_path, output_path):
@@ -49,5 +75,3 @@ def txt_to_pdf(input_path, output_path):
             y -= 20
 
     pdf.save()
-
-convert_document("test.txt", "pdf")

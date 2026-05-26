@@ -22,7 +22,5 @@ def convert_video(input_path, output_format):
     name = os.path.splitext(input_path)[0]
     output_path = f"{name}.{output_format}"
 
-    ffmpeg.input(input_path).output(output_path).run()
+    ffmpeg.input(input_path).output(output_path).run(overwrite_output=True)
     print(f"Saved as: {output_path}")
-
-convert_video("test.mp4", "avi")

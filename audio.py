@@ -25,5 +25,3 @@ def convert_audio(input_path, output_format):
     audio = AudioSegment.from_file(input_path, format=input_format)
     audio.export(output_path, format=output_format)
     print(f"Saved as: {output_path}")
-
-convert_audio("test.mp3", "wav")

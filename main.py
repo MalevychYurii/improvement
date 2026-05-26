@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import ctypes
+ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
 from tkinter import filedialog
 from images import convert_image
 from documents import convert_document
@@ -7,7 +9,7 @@ from video import convert_video
 
 app = ctk.CTk()
 app.title("File Converter")
-app.geometry("600x400")
+app.geometry("600x450")
 
 tabview = ctk.CTkTabview(app)
 tabview.pack(fill="both", expand=True, padx=20, pady=20)
@@ -30,10 +32,16 @@ def setup_images_tab():
     def convert():
         path = selected_file.get()
         fmt = format_var.get()
-        if path:
+        if not path:
+            status_label.configure(text="No file selected", text_color="red")
+            return
+        try:
+            status_label.configure(text="Converting...", text_color="gray")
+            app.update()
             convert_image(path, fmt)
-        else:
-            print("No file selected")
+            status_label.configure(text="Success!", text_color="green")
+        except Exception as e:
+            status_label.configure(text=f"Error: {e}", text_color="red")
 
     btn_choose = ctk.CTkButton(tab, text="Choose file", command=choose_file)
     btn_choose.pack(pady=20)
@@ -48,6 +56,9 @@ def setup_images_tab():
     btn_convert = ctk.CTkButton(tab, text="Convert", command=convert)
     btn_convert.pack(pady=10)
 
+    status_label = ctk.CTkLabel(tab, text="")
+    status_label.pack(pady=5)
+
 def setup_documents_tab():
     tab = tabview.tab("Documents")
     selected_file = ctk.StringVar()
@@ -61,10 +72,16 @@ def setup_documents_tab():
     def convert():
         path = selected_file.get()
         fmt = format_var.get()
-        if path:
+        if not path:
+            status_label.configure(text="No file selected", text_color="red")
+            return
+        try:
+            status_label.configure(text="Converting...", text_color="gray")
+            app.update()
             convert_document(path, fmt)
-        else:
-            print("No file selected")
+            status_label.configure(text="Success!", text_color="green")
+        except Exception as e:
+            status_label.configure(text=f"Error: {e}", text_color="red")
 
     btn_choose = ctk.CTkButton(tab, text="Choose file", command=choose_file)
     btn_choose.pack(pady=20)
@@ -79,6 +96,9 @@ def setup_documents_tab():
     btn_convert = ctk.CTkButton(tab, text="Convert", command=convert)
     btn_convert.pack(pady=10)
 
+    status_label = ctk.CTkLabel(tab, text="")
+    status_label.pack(pady=5)
+
 def setup_audio_tab():
     tab = tabview.tab("Audio")
     selected_file = ctk.StringVar()
@@ -92,10 +112,16 @@ def setup_audio_tab():
     def convert():
         path = selected_file.get()
         fmt = format_var.get()
-        if path:
+        if not path:
+            status_label.configure(text="No file selected", text_color="red")
+            return
+        try:
+            status_label.configure(text="Converting...", text_color="gray")
+            app.update()
             convert_audio(path, fmt)
-        else:
-            print("No file selected")
+            status_label.configure(text="Success!", text_color="green")
+        except Exception as e:
+            status_label.configure(text=f"Error: {e}", text_color="red")
 
     btn_choose = ctk.CTkButton(tab, text="Choose file", command=choose_file)
     btn_choose.pack(pady=20)
@@ -110,6 +136,9 @@ def setup_audio_tab():
     btn_convert = ctk.CTkButton(tab, text="Convert", command=convert)
     btn_convert.pack(pady=10)
 
+    status_label = ctk.CTkLabel(tab, text="")
+    status_label.pack(pady=5)
+
 def setup_video_tab():
     tab = tabview.tab("Video")
     selected_file = ctk.StringVar()
@@ -123,10 +152,16 @@ def setup_video_tab():
     def convert():
         path = selected_file.get()
         fmt = format_var.get()
-        if path:
+        if not path:
+            status_label.configure(text="No file selected", text_color="red")
+            return
+        try:
+            status_label.configure(text="Converting...", text_color="gray")
+            app.update()
             convert_video(path, fmt)
-        else:
-            print("No file selected")
+            status_label.configure(text="Success!", text_color="green")
+        except Exception as e:
+            status_label.configure(text=f"Error: {e}", text_color="red")
 
     btn_choose = ctk.CTkButton(tab, text="Choose file", command=choose_file)
     btn_choose.pack(pady=20)
@@ -140,6 +175,9 @@ def setup_video_tab():
 
     btn_convert = ctk.CTkButton(tab, text="Convert", command=convert)
     btn_convert.pack(pady=10)
+
+    status_label = ctk.CTkLabel(tab, text="")
+    status_label.pack(pady=5)
 
 setup_images_tab()
 setup_documents_tab()
