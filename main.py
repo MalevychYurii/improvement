@@ -1,11 +1,17 @@
 import customtkinter as ctk
 import ctypes
+import os
 ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
 from tkinter import filedialog
 from images import convert_image
 from documents import convert_document
 from audio import convert_audio
 from video import convert_video
+import sys
+
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASS
+    os.environ["PATH"] += os.pathsep + base_path
 
 app = ctk.CTk()
 app.title("File Converter")

@@ -2,7 +2,7 @@ from pdf2docx import Converter
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import os
-import subprocess
+import comtypes.client
 
 supported_input_formats = ["docx", "pdf", "txt"]
 
@@ -36,29 +36,16 @@ def convert_document(input_path, output_format):
 
 
 def docx_to_pdf(input_path, output_path):
-    output_dir = os.path.dirname(os.path.abspath(output_path))
-    word_paths = [
-        r"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE",
-        r"C:\Program Files (x86)\Microsoft Office\root\Office16\WINWORD.EXE",
-        r"C:\Program Files\Microsoft Office\Office16\WINWORD.EXE",
-    ]
+    input_path = os.path.abspath(input_path)
+    output_path = os.path.abspath(output_path)
     
-    word_exe = None
-    for path in word_paths:
-        if os.path.exists(path):
-            word_exe = path
-            break
+    word = comtypes.client.CreateObject("Word.Application")
+    word.Visible = False
     
-    if not word_exe:
-        raise Exception("Microsoft Word not found")
-    
-    subprocess.run([
-        word_exe,
-        "/q",
-        "/n",
-        input_path,
-        "/mFileSaveAs",
-    ], timeout=30)
+    doc = word.Documents.Open(input_path)
+    doc.SaveAs(output_path, FileFormat=17)
+    doc.Close()
+    word.Quit()
 
 
 def txt_to_pdf(input_path, output_path):
